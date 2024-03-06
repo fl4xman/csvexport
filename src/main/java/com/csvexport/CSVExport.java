@@ -35,7 +35,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @PluginDescriptor(
-		name = "CSV Export"
+		name = "CSV Export",
+		description = "Save data from OSRS to csv"
 )
 public class CSVExport extends Plugin {
 
@@ -81,7 +82,7 @@ public class CSVExport extends Plugin {
 		File outputDataFile = new File(dataFileName);
 		File inventoryDataFile = new File(inventoryFileName);
 		File tileObjectDataFile = new File(tileObjectFileName);
-		File itemsDataFile = new File(itemsFileName);
+
 
 		try {
 			writer = new BufferedWriter(new FileWriter(outputDataFile));
