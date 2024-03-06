@@ -1,13 +1,12 @@
-# betterHTTP
-An improved runelite http plugin for receiving game data via http.  
-There are many great usecases for this such as:
+# CSVExport
+A plugin to extract key information out of the game as csv for analysis in Excel/Tableau/PowerBI
 
-1. **Stat Tracking**: Allow users to track their in-game statistics over time, including experience gained, items collected, etc. This could be useful for personal improvement or for sharing achievements with friends.
+## Usage
+Use the config to select an output dir, defaults to home/user. Each tick, the game will write 4 .csv files:
 
-2. **Combat Analysis**: Gather data on combat encounters, including active prayers, health & prayer levels, damage received, etc. This could be useful for analyzing bossing performance.
+tile_data: info on items around your character with GE prices
+player_data: key player metrics such as stats, health, location
 
-3. **Community Events**: Facilitate community events and competitions by providing tools for tracking participants and messages in the surrounding environment.
+items_data: info on inventory and equipped items
 
-4. **Monitoring Inventory & Equipment**: See what you have in your inventory for each slot - useful for monitoring how your inventory changes over time.
-
-5. **And more**
+A new file will be created each day as to avoid file bloat

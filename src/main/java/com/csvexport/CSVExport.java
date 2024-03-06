@@ -159,6 +159,17 @@ public class CSVExport extends Plugin {
 		Actor npc = player.getInteracting();
 		String npcName = npc != null ? npc.getName() : "null";
 
+
+		for (NPC eachNpc : client.getNpcs()) {
+			String name = Objects.requireNonNull(eachNpc.getName()).toLowerCase();
+			writeRow(writer, timestamp, "local_npcs", "name", name);
+		}
+
+		writeGroundItems();
+
+		writeInventory(InventoryID.INVENTORY);
+		writeInventory(InventoryID.EQUIPMENT);
+
 		writeRow(writer, timestamp, "status", "active_prayer", player.getOverheadIcon() != null ? player.getOverheadIcon().name().toLowerCase() : "null");
 		writeRow(writer, timestamp, "status", "animation", String.valueOf(player.getAnimation()));
 		writeRow(writer, timestamp, "status", "animation_pose", String.valueOf(player.getPoseAnimation()));
@@ -179,17 +190,6 @@ public class CSVExport extends Plugin {
 		writeRow(writer, timestamp, "positional", "player_regionID", String.valueOf(playerLocation.getRegionID()));
 		writeRow(writer, timestamp, "positional", "player_regionX", String.valueOf(playerLocation.getRegionX()));
 		writeRow(writer, timestamp, "positional", "player_regionY", String.valueOf(playerLocation.getRegionY()));
-
-		for (NPC eachNpc : client.getNpcs()) {
-			String name = Objects.requireNonNull(eachNpc.getName()).toLowerCase();
-			writeRow(writer, timestamp, "local_npcs", "name", name);
-		}
-
-		writeGroundItems();
-
-		writeInventory(InventoryID.INVENTORY);
-		writeInventory(InventoryID.EQUIPMENT);
-
 
 	}
 
