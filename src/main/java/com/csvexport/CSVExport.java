@@ -51,7 +51,6 @@ public class CSVExport extends Plugin {
 	private BufferedWriter writer;
 	private BufferedWriter inventoryWriter;
 	private BufferedWriter tileObjectWriter;
-	private BufferedWriter itemsWriter;
 
 	private String latestMessage;
 
@@ -88,7 +87,6 @@ public class CSVExport extends Plugin {
 			writer = new BufferedWriter(new FileWriter(outputDataFile));
 			inventoryWriter = new BufferedWriter(new FileWriter(inventoryDataFile));
 			tileObjectWriter = new BufferedWriter(new FileWriter(tileObjectDataFile));
-			itemsWriter = new BufferedWriter(new FileWriter(itemsDataFile));
 
 			log.info("Writers initialized: {}, {}, {} and {}", dataFileName, inventoryFileName, tileObjectFileName, itemsFileName);
 
@@ -101,8 +99,6 @@ public class CSVExport extends Plugin {
 			tileObjectWriter.write("timestamp,name,price,xp,yp\n");
 			tileObjectWriter.flush();
 
-			itemsWriter.write("timestamp,item_id,quantity\n");
-			itemsWriter.flush();
 		} catch (IOException e) {
 			log.error("Failed to initialize file writers", e);
 		}
@@ -125,9 +121,7 @@ public class CSVExport extends Plugin {
 		if (tileObjectWriter != null) {
 			tileObjectWriter.close();
 		}
-		if (itemsWriter != null) {
-			itemsWriter.close();
-		}
+
 	}
 
 	@Subscribe
