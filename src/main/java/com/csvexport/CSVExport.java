@@ -30,6 +30,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.HashMap;
+import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,6 +57,8 @@ public class CSVExport extends Plugin {
 
 	private String latestMessage;
 
+	private Map<String, String> previousValues;
+
 	@Provides
 	CSVExportConfig getConfig(ConfigManager configManager)
 	{
@@ -62,6 +66,7 @@ public class CSVExport extends Plugin {
 	}
 
 	private void initializeFileWriters() {
+
 		String outputFolderPath = Paths.get(config.SaveDir(), "osrs_stats").toString();
 		Path outputFolder = Paths.get(outputFolderPath);
 
@@ -82,7 +87,7 @@ public class CSVExport extends Plugin {
 		File outputDataFile = new File(dataFileName);
 		File inventoryDataFile = new File(inventoryFileName);
 		File tileObjectDataFile = new File(tileObjectFileName);
-
+		previousValues = new HashMap<>();
 
 		try {
 			writer = new BufferedWriter(new FileWriter(outputDataFile));
@@ -126,7 +131,7 @@ public class CSVExport extends Plugin {
 	}
 
 	@Subscribe
-	public void onChatMessage(ChatMessage event) {
+	public void 	onChatMessage(ChatMessage event) {
 		latestMessage = event.getMessage();
 	}
 
@@ -185,7 +190,6 @@ public class CSVExport extends Plugin {
 		writeRow(writer, timestamp, "positional", "player_regionID", String.valueOf(playerLocation.getRegionID()));
 		writeRow(writer, timestamp, "positional", "player_regionX", String.valueOf(playerLocation.getRegionX()));
 		writeRow(writer, timestamp, "positional", "player_regionY", String.valueOf(playerLocation.getRegionY()));
-
 	}
 
 	private void writeGroundItems() throws IOException {
@@ -200,8 +204,8 @@ public class CSVExport extends Plugin {
 
 		Scene scene = client.getScene();
 
-		for (int offsetX = -25; offsetX <= 25; offsetX++) {
-			for (int offsetY = -25; offsetY <= 25; offsetY++) {
+		for (int offsetX = -300; offsetX <= 300; offsetX++) {
+			for (int offsetY = -300; offsetY <= 300; offsetY++) {
 				int tileX = sceneX + offsetX;
 				int tileY = sceneY + offsetY;
 
@@ -261,8 +265,13 @@ public class CSVExport extends Plugin {
 
 	private void writeRow(BufferedWriter writer, String timestamp, String type, String variable, String value) throws IOException {
 		if (writer != null) {
-			writer.write(String.format("%s,%s,%s,%s\n", timestamp, type, variable, value));
-			writer.flush();
+			String key = type + variable;
+			String previousValue = previousValues.get(key);
+			if (previousValue == null || !previousValue.equals(value)) {
+				writer.write(String.format("%s,%s,%s,%s\n", timestamp, type, variable, value));
+				writer.flush();
+				previousValues.put(key, value);
+			}
 		} else {
 			log.error("BufferedWriter is null. Cannot write data.");
 		}
