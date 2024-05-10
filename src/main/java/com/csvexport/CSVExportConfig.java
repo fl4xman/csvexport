@@ -16,5 +16,14 @@ public interface CSVExportConfig extends Config {
         return System.getProperty("user.home");
 
     };
+    @ConfigItem(
+            keyName = "MaxFileSize",
+            name = "Max File Size",
+            description = "Files greater than this size will be truncated. Set as 0 no truncation."
+    )
+    default Integer MaxFileSize() {
+        return 0;
+
+    };
 
 }
