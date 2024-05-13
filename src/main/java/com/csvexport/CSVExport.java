@@ -222,14 +222,18 @@ public class CSVExport extends Plugin {
 				WorldPoint worldPoint = sceneTile.getWorldLocation();
 				List<TileItem> groundItems = sceneTile.getGroundItems();
 				if (groundItems != null) {
+
+					float cw = (float) client.getCanvasWidth();
+					float ch = (float) client.getCanvasHeight();
 					for (TileItem groundItem : groundItems) {
 						String itemName = client.getItemDefinition(groundItem.getId()).getName();
+						Point location = Perspective.localToCanvas(client, sceneTile.getLocalLocation(), sceneTile.getPlane(), 0);
+						String xpAsString = String.valueOf(location.getX() / cw);
+						String ypAsString = String.valueOf(location.getY() / ch);
 						int itemPrice = client.getItemDefinition(groundItem.getId()).getPrice();
-						String yp = Arrays.toString(Perspective.getCanvasTilePoly(client, Objects.requireNonNull(LocalPoint.fromWorld(client, worldPoint))).ypoints);
-						String xp = Arrays.toString(Perspective.getCanvasTilePoly(client, Objects.requireNonNull(LocalPoint.fromWorld(client, worldPoint))).xpoints);
 
 						// Write tile object information to the file
-						String row = String.format("%s,%s,%d,%s,%s\n", timestamp, itemName, itemPrice, xp, yp);
+						String row = String.format("%s,%s,%d,%s,%s\n", timestamp, itemName, itemPrice, xpAsString, ypAsString);
 						tileObjectWriter.write(row);
 						tileObjectWriter.flush();
 					}
