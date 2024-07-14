@@ -146,7 +146,7 @@ public class CSVExport extends Plugin {
 
 	private void writeGameData() throws IOException {
 		LocalDateTime currentTime = LocalDateTime.now();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSS");
 		String timestamp = currentTime.format(formatter);
 
 		for (Skill skill : Skill.values()) {
@@ -194,7 +194,7 @@ public class CSVExport extends Plugin {
 
 	private void writeGroundItems() throws IOException {
 		LocalDateTime currentTime = LocalDateTime.now();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 		String timestamp = currentTime.format(formatter);
 
 		LocalPoint localPoint = client.getLocalPlayer().getLocalLocation();
@@ -244,7 +244,7 @@ public class CSVExport extends Plugin {
 
 	private void writeInventory(InventoryID inventoryID) {
 		LocalDateTime currentTime = LocalDateTime.now();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 		String timestamp = currentTime.format(formatter);
 
 		clientThread.invokeLater(() -> {
@@ -252,12 +252,16 @@ public class CSVExport extends Plugin {
 			Item[] items = itemContainer != null ? itemContainer.getItems() : null;
 
 			if (items != null) {
+				StringBuilder sb = new StringBuilder();
 				try {
 					for (Item item : items) {
-						String row = String.format("%s,%s,%s,%s\n", timestamp, inventoryID.name(), item.getId(), item.getQuantity());
-						inventoryWriter.write(row);
-						inventoryWriter.flush();
+						sb.append(timestamp).append(',')
+								.append(inventoryID.name()).append(',')
+								.append(item.getId()).append(',')
+								.append(item.getQuantity()).append('\n');
 					}
+					inventoryWriter.write(sb.toString());
+					inventoryWriter.flush();
 				} catch (IOException e) {
 					log.error("Error writing inventory data: {}", e.getMessage());
 				}
@@ -272,7 +276,12 @@ public class CSVExport extends Plugin {
 			String key = type + variable;
 			String previousValue = previousValues.get(key);
 			if (previousValue == null || !previousValue.equals(value)) {
-				writer.write(String.format("%s,%s,%s,%s\n", timestamp, type, variable, value));
+				StringBuilder sb = new StringBuilder();
+				sb.append(timestamp).append(',')
+						.append(type).append(',')
+						.append(variable).append(',')
+						.append(value).append('\n');
+				writer.write(sb.toString());
 				writer.flush();
 				previousValues.put(key, value);
 			}
