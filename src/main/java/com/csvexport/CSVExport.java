@@ -130,6 +130,9 @@ public class CSVExport extends Plugin {
 		if (inventoryWriter != null) {
 			inventoryWriter.close();
 		}
+		if (equipmentWriter != null) {
+			equipmentWriter.close();
+		}
 		if (tileObjectWriter != null) {
 			tileObjectWriter.close();
 		}
